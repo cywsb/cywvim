@@ -1,0 +1,13 @@
+{
+    "suggest.noselect": false,
+
+    "suggest.autoTrigger": "always",
+
+    "python.formatting.provider": "black",
+
+    "python.linting.enabled": true,
+
+    "diagnostic.enable": true,
+
+    "languageserver": {}
+}

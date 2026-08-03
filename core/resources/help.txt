@@ -1,0 +1,26 @@
+========================================
+              CywVim
+========================================
+
+ARCHIVOS
+
+  Ctrl+n        NERDTree
+  Ctrl+p        Buscar archivos (FZF)
+
+EDICIÓN
+
+  gcc           Comentar línea
+  gc            Comentar selección
+  ysiw"         Surround
+
+COC
+
+  gd            Ir a definición
+  K             Documentación
+
+GENERAL
+
+  :CywVersion
+  :CywHelp
+
+========================================
