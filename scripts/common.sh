@@ -24,6 +24,8 @@ readonly VIM_DIR="$PROJECT_ROOT/vim"
 readonly CONFIG_DIR="$VIM_DIR/config"
 readonly PLUGINS_DIR="$VIM_DIR/plugins"
 readonly CORE_DIR="$VIM_DIR/core"
+readonly INSTALL_DIR="$HOME/.vim"
+readonly VIMRC_FILE="$HOME/.vimrc"
 
 readonly DOCS_DIR="$PROJECT_ROOT/docs"
 readonly TESTS_DIR="$PROJECT_ROOT/tests"
@@ -92,10 +94,22 @@ cyw_banner() {
 # Sistema
 # ==================================================
 
+detect_system()
+{
+    cyw_info "Sistema detectado:"
+
+    if [[ -f /etc/os-release ]]; then
+        source /etc/os-release
+        echo "$PRETTY_NAME"
+    else
+        cyw_warning "No se pudo detectar distribución."
+    fi
+
+    echo
+}
+
 #cyw_detect_os()
-
 #cyw_detect_arch()
-
 #cyw_detect_user()
 
 # ==================================================

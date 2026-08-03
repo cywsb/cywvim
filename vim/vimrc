@@ -16,24 +16,23 @@ endif
 
 let g:loaded_cywvim = 1
 
-
 " ==================================================
 " Detectar automáticamente la carpeta de CywVim
 " ==================================================
 
-let s:base_path   = fnamemodify(expand('<sfile>:p'), ':h')
-let s:config_path = s:base_path . '/config'
-let s:core_path   = s:base_path . '/core'
-
+let s:base_path    = fnamemodify(expand('<sfile>:p'), ':h')
+let s:config_path  = s:base_path . '/config'
+let s:plugins_path = s:base_path . '/plugins'
+let s:core_path    = s:base_path . '/core'
 
 " ==================================================
 " Variables globales
 " ==================================================
 
-let g:cywvim_root   = s:base_path
-let g:cywvim_config = s:config_path
-let g:cywvim_core   = s:core_path
-
+let g:cywvim_root    = s:base_path
+let g:cywvim_config  = s:config_path
+let g:cywvim_plugins = s:plugins_path
+let g:cywvim_core    = s:core_path
 
 " ==================================================
 " Core
@@ -46,92 +45,30 @@ execute 'source ' . s:core_path . '/functions.vim'
 execute 'source ' . s:core_path . '/health.vim'
 execute 'source ' . s:core_path . '/commands.vim'
 
-
 " ==================================================
 " Configuración base
 " ==================================================
 
-" --------------------------------------------------
-" Configuración general
-" --------------------------------------------------
-
 execute 'source ' . s:config_path . '/general.vim'
-
-" --------------------------------------------------
-" Apariencia
-" --------------------------------------------------
-
 execute 'source ' . s:config_path . '/appearance.vim'
-
-" --------------------------------------------------
-" Edición
-" --------------------------------------------------
-
 execute 'source ' . s:config_path . '/editing.vim'
-
-" --------------------------------------------------
-" Búsqueda
-" --------------------------------------------------
-
 execute 'source ' . s:config_path . '/search.vim'
-
-" --------------------------------------------------
-" Tipos de archivo
-" --------------------------------------------------
-
 execute 'source ' . s:config_path . '/filetypes.vim'
 
-
 " ==================================================
-" Plugins
-" ==================================================
-
-execute 'source ' . s:config_path . '/plugins.vim'
-
-
-" ==================================================
-" Configuración de Plugins
+" Gestión de plugins
 " ==================================================
 
-" --------------------------------------------------
-" Tema Gruvbox
-" --------------------------------------------------
-
-execute 'source ' . s:config_path . '/colors.vim'
-
-" --------------------------------------------------
-" Explorador de archivos
-" --------------------------------------------------
-
-execute 'source ' . s:config_path . '/nerdtree.vim'
-
-" --------------------------------------------------
-" Barra de estado
-" --------------------------------------------------
-
-execute 'source ' . s:config_path . '/airline.vim'
-
-" --------------------------------------------------
-" Git
-" --------------------------------------------------
-
-execute 'source ' . s:config_path . '/git.vim'
-
-" --------------------------------------------------
-" Paréntesis automáticos
-" --------------------------------------------------
-
-execute 'source ' . s:config_path . '/autopairs.vim'
-
-" --------------------------------------------------
-" Autocompletado (COC)
-" --------------------------------------------------
-
-execute 'source ' . s:config_path . '/coc.vim'
-
+execute 'source ' . s:plugins_path . '/plugins.vim'
 
 " ==================================================
-" Atajos de teclado
+" Configuración de plugins
 " ==================================================
 
-execute 'source ' . s:config_path . '/mappings.vim'
+execute 'source ' . s:plugins_path . '/colors.vim'
+execute 'source ' . s:plugins_path . '/nerdtree.vim'
+execute 'source ' . s:plugins_path . '/airline.vim'
+execute 'source ' . s:plugins_path . '/git.vim'
+execute 'source ' . s:plugins_path . '/autopairs.vim'
+execute 'source ' . s:plugins_path . '/coc.vim'
+execute 'source ' . s:plugins_path . '/mappings.vim'

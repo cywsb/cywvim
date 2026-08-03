@@ -1,0 +1,23 @@
+main() {
+
+    detect_system
+
+    create_backup
+
+    install_dependencies
+
+    install_vim_plug
+
+    install_configuration
+
+    install_plugins
+
+    install_coc_extensions
+
+
+    cyw_success "CywVim instalado correctamente."
+
+}
+
+
+main "$@"
