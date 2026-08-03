@@ -1,239 +1,265 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+# ==================================================
+# CywVim
+# Instalador
+# ==================================================
 
-# ==========================================
-# CywVim v1.0
-# Instalador de Vim personalizado
-# Debian / Ubuntu / Linux Mint
-# ==========================================
-
-VERSION="1.0"
-
-# Colores
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+set -e
 
 
-info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+# ==================================================
+# Directorio del proyecto
+# ==================================================
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+
+# ==================================================
+# Cargar librería común
+# ==================================================
+
+source "$SCRIPT_DIR/scripts/common.sh"
+
+
+# ==================================================
+# Variables del Instalador
+# ==================================================
+
+readonly INSTALL_DIR="$HOME/.vim"
+
+readonly VIMRC_FILE="$HOME/.vimrc"
+
+readonly BACKUP_DIR="$HOME/.cywvim_backup_$(date +%Y%m%d_%H%M%S)"
+
+# ==================================================
+# Funciones
+# ==================================================
+
+# --------------------------------------------------
+# Crear backup de configuración existente
+# --------------------------------------------------
+
+create_backup() {
+
+    cyw_info "Creando backup..."
+
+    mkdir -p "$BACKUP_DIR"
+
+
+    if [[ -d "$HOME/.vim" ]]; then
+
+        cyw_info "Respaldando ~/.vim"
+
+        cp -a "$HOME/.vim" "$BACKUP_DIR/"
+
+    fi
+
+
+    if [[ -f "$HOME/.vimrc" ]]; then
+
+        cyw_info "Respaldando ~/.vimrc"
+
+        cp -a "$HOME/.vimrc" "$BACKUP_DIR/"
+
+    fi
+
+
+    cyw_success "Backup creado:"
+    echo "$BACKUP_DIR"
+
 }
 
-success() {
-    echo -e "${GREEN}[OK]${NC} $1"
-}
+# --------------------------------------------------
+# Instalar dependencias
+# --------------------------------------------------
 
-warning() {
-    echo -e "${YELLOW}[WARN]${NC} $1"
-}
+install_dependencies() {
 
-error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
+    cyw_info "Instalando dependencias..."
 
 
-# ==========================================
-# Comprobar sistema
-# ==========================================
-
-if [ ! -f /etc/os-release ]; then
-    error "No se pudo detectar la distribución."
-    exit 1
-fi
-
-source /etc/os-release
-
-info "Sistema detectado:"
-echo "$PRETTY_NAME"
+    local packages=(
+        vim
+        git
+        curl
+        ripgrep
+        fzf
+        xclip
+        universal-ctags
+        fonts-powerline
+        build-essential
+    )
 
 
-# ==========================================
-# Dependencias
-# ==========================================
+    if ! command -v apt >/dev/null 2>&1; then
 
-install_packages() {
+        cyw_fatal "Este instalador actualmente requiere apt."
 
-    info "Actualizando repositorios..."
+    fi
+
+
+    cyw_info "Actualizando repositorios..."
 
     sudo apt update
 
 
-    info "Instalando dependencias..."
-
-    sudo apt install -y \
-        vim \
-        git \
-        curl \
-        ripgrep \
-        fzf \
-        xclip \
-        universal-ctags \
-        fonts-powerline \
-        build-essential
+    cyw_info "Instalando paquetes..."
 
 
-    success "Dependencias instaladas."
+    sudo apt install -y "${packages[@]}"
+
+
+    cyw_success "Dependencias instaladas."
+
 }
 
+# --------------------------------------------------
+# Instalar vim-plug
+# --------------------------------------------------
 
-# ==========================================
-# Backup
-# ==========================================
+install_vim_plug() {
 
-backup_old_config() {
-
-    DATE=$(date +"%Y%m%d_%H%M%S")
-
-    BACKUP="$HOME/.cywvim_backup_$DATE"
-
-    mkdir -p "$BACKUP"
+    cyw_info "Instalando vim-plug..."
 
 
-    if [ -f "$HOME/.vimrc" ]; then
-        cp "$HOME/.vimrc" "$BACKUP/"
+    local plug_path="$HOME/.vim/autoload/plug.vim"
+
+
+    if [[ -f "$plug_path" ]]; then
+
+        cyw_success "vim-plug ya está instalado."
+
+        return
+
     fi
 
 
-    if [ -d "$HOME/.vim" ]; then
-        cp -r "$HOME/.vim" "$BACKUP/"
+    mkdir -p "$(dirname "$plug_path")"
+
+
+    curl -fLo "$plug_path" --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+
+    if [[ -f "$plug_path" ]]; then
+
+        cyw_success "vim-plug instalado."
+
+    else
+
+        cyw_fatal "No se pudo instalar vim-plug."
+
+    fi
+
+}
+
+# --------------------------------------------------
+# Instalar configuración CywVim
+# --------------------------------------------------
+
+install_configuration() {
+
+    cyw_info "Instalando configuración CywVim..."
+
+
+    if [[ ! -d "$VIM_DIR" ]]; then
+
+        cyw_fatal "No existe el directorio Vim del proyecto:"
+        echo "$VIM_DIR"
+
     fi
 
 
-    success "Backup creado en:"
-    echo "$BACKUP"
+    cyw_info "Copiando archivos Vim..."
+
+
+    mkdir -p "$INSTALL_DIR"
+
+
+    cp -a "$VIM_DIR/." "$INSTALL_DIR/"
+
+
+    cyw_info "Instalando loader .vimrc..."
+
+    cat > "$VIMRC_FILE" <<'CYWVIM_LOADER'
+
+    " ==========================================
+    " CywVim Loader
+    " ==========================================
+
+    if filereadable(expand("~/.vim/vimrc"))
+        source ~/.vim/vimrc
+    endif
+CYWVIM_LOADER
+
+    cyw_success "Configuración instalada."
+
 }
 
-
-# ==========================================
-# vim-plug
-# ==========================================
-
-install_vimplug() {
-
-    info "Instalando vim-plug..."
-
-    curl -fLo \
-    "$HOME/.vim/autoload/plug.vim" \
-    --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-
-    success "vim-plug instalado."
-}
-
-
-# ==========================================
-# Copiar configuración
-# ==========================================
-
-install_config() {
-
-    info "Instalando configuración CywVim..."
-
-
-    # Crear estructura Vim
-
-    mkdir -p "$HOME/.vim"
-
-    mkdir -p "$HOME/.vim/config"
-
-    mkdir -p "$HOME/.vim/backup"
-
-    mkdir -p "$HOME/.vim/swap"
-
-    mkdir -p "$HOME/.vim/undo"
-
-    mkdir -p "$HOME/.vim/plugged"
-
-
-
-    # Copiar vimrc
-
-    cp vimrc "$HOME/.vimrc"
-
-
-
-    # Copiar módulos
-
-    cp config/*.vim "$HOME/.vim/config/"
-
-
-
-    # Configuración COC
-
-    cp coc-settings.json "$HOME/.vim/coc-settings.json"
-
-
-
-    success "Configuración instalada."
-}
-
-# ==========================================
-# Plugins
-# ==========================================
+# --------------------------------------------------
+# Instalar plugins Vim
+# --------------------------------------------------
 
 install_plugins() {
 
-    info "Instalando plugins Vim..."
+    cyw_info "Instalando plugins Vim..."
 
-    vim +PlugInstall +qall || true
 
-    success "Plugins instalados."
+    if ! command -v vim >/dev/null 2>&1; then
+
+        cyw_fatal "Vim no está instalado."
+
+    fi
+
+
+    vim +PlugInstall +qall
+
+
+    cyw_success "Plugins instalados."
+
+}
+
+# --------------------------------------------------
+# Detectar sistema operativo
+# --------------------------------------------------
+
+detect_system() {
+
+    cyw_info "Sistema detectado:"
+
+    if [[ -f /etc/os-release ]]; then
+
+        . /etc/os-release
+
+        echo "$PRETTY_NAME"
+
+    else
+
+        cyw_warning "No se pudo detectar la distribución."
+
+    fi
+
+    echo
+
 }
 
 
-# ==========================================
-# MAIN
-# ==========================================
 
-echo
-echo "================================="
-echo " CywVim v$VERSION"
-echo " Instalación"
-echo "================================="
-echo
+# ==================================================
+# Programa principal
+# ==================================================
 
+main() {
 
-backup_old_config
+    detect_system
+    create_backup
+    install_dependencies
+    install_vim_plug
+    install_configuration
+    install_plugins
 
-install_packages
-
-install_vimplug
-
-install_config
-
-install_plugins
+}
 
 
-echo
-success "CywVim instalado correctamente."
-echo
-echo "Cierra y abre Vim nuevamente."
-
-
-echo
-echo "================================="
-echo " Verificación"
-echo "================================="
-
-
-echo
-
-echo "Vim:"
-vim --version | head -1
-
-
-echo
-
-echo "Configuración:"
-ls ~/.vim/config
-
-
-echo
-
-echo "CywVim instalado."
-
-
+main "$@"
