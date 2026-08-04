@@ -1,4 +1,3 @@
-cat > resources/packages_debian.txt <<'EOF'
 # Dependencias Debian
 
 vim
@@ -10,4 +9,3 @@ xclip
 universal-ctags
 fonts-powerline
 build-essential
-EOF

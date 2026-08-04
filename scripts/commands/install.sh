@@ -11,7 +11,9 @@ set -euo pipefail
 # Directorio del proyecto
 # ==================================================
 
-readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 # ==================================================
 # Cargar biblioteca común
@@ -40,33 +42,24 @@ main() {
 
     cyw_detect_system
 
-    # ----------------------------------------
-    # Preparación
-    # ----------------------------------------
-
     create_backup
+
     install_dependencies
+
     install_vim_plug
 
-    # ----------------------------------------
-    # Instalación
-    # ----------------------------------------
-
     install_configuration
+
     install_plugins
+
     install_coc_extensions
 
     # ----------------------------------------
     # Finalización
     # ----------------------------------------
 
-    echo
-
     cyw_success "CywVim instalado correctamente."
 
-    cyw_info "Ejecute 'vim' para comenzar."
-
-    echo
 }
 
 main "$@"
