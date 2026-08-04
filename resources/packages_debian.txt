@@ -1,0 +1,13 @@
+cat > resources/packages_debian.txt <<'EOF'
+# Dependencias Debian
+
+vim
+git
+curl
+ripgrep
+fzf
+xclip
+universal-ctags
+fonts-powerline
+build-essential
+EOF

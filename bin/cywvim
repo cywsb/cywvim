@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# ==================================================
+# CywVim
+# Command Line Interface
+# ==================================================
+
+set -euo pipefail
+
+readonly ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+readonly COMMAND="${1:-help}"
+
+case "$COMMAND" in
+
+    install)
+        exec "$ROOT/scripts/commands/install.sh"
+        ;;
+
+    update)
+        exec "$ROOT/scripts/commands/update.sh"
+        ;;
+
+    check)
+        exec "$ROOT/scripts/commands/check.sh"
+        ;;
+
+    uninstall)
+        exec "$ROOT/scripts/commands/uninstall.sh"
+        ;;
+
+    version)
+        exec "$ROOT/scripts/commands/version.sh"
+        ;;
+
+    help|-h|--help)
+        exec "$ROOT/scripts/commands/help.sh"
+        ;;
+
+    *)
+
+        echo "Comando desconocido: $COMMAND"
+        echo
+
+        exec "$ROOT/scripts/commands/help.sh"
+
+        ;;
+
+esac

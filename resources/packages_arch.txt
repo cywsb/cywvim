@@ -1,0 +1,3 @@
+cat > resources/packages_arch.txt <<'EOF'
+# Pendiente soporte Arch Linux
+EOF

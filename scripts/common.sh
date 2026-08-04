@@ -8,27 +8,38 @@
 set -euo pipefail
 
 # ==================================================
-# Variables globales
+# Directorios del proyecto
 # ==================================================
+
+readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly RESOURCES_DIR="$PROJECT_ROOT/resources"
+
+readonly VIM_DIR="$PROJECT_ROOT/vim"
+
+readonly CORE_DIR="$VIM_DIR/core"
+readonly CONFIG_DIR="$VIM_DIR/config"
+readonly PLUGINS_DIR="$VIM_DIR/plugins"
+
+readonly DOCS_DIR="$PROJECT_ROOT/docs"
+readonly TESTS_DIR="$PROJECT_ROOT/tests"
+
+# ==================================================
+# Directorios del usuario
+# ==================================================
+
+readonly INSTALL_DIR="$HOME/.vim"
+readonly VIMRC_FILE="$HOME/.vimrc"
+
+# ==================================================
+# Información del proyecto
+# ==================================================
+
+readonly CYWVIM_NAME="CywVim"
+readonly CYWVIM_VERSION="$(<"$PROJECT_ROOT/VERSION")"
 
 readonly CYWVIM_AUTHOR="Cyw"
 readonly CYWVIM_LICENSE="MIT"
 readonly CYWVIM_GITHUB="https://github.com/cywsb/cywvim"
-readonly CYWVIM_NAME="CywVim"
-readonly CYWVIM_VERSION="1.0.0"
-
-readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-
-readonly VIM_DIR="$PROJECT_ROOT/vim"
-
-readonly CONFIG_DIR="$VIM_DIR/config"
-readonly PLUGINS_DIR="$VIM_DIR/plugins"
-readonly CORE_DIR="$VIM_DIR/core"
-readonly INSTALL_DIR="$HOME/.vim"
-readonly VIMRC_FILE="$HOME/.vimrc"
-
-readonly DOCS_DIR="$PROJECT_ROOT/docs"
-readonly TESTS_DIR="$PROJECT_ROOT/tests"
 
 # ==================================================
 # Colores
@@ -79,9 +90,42 @@ cyw_separator() {
 }
 
 cyw_banner() {
+
     cyw_separator
-    echo "${CYWVIM_NAME} v${CYWVIM_VERSION}"
+
+    echo
+    echo " ${CYWVIM_NAME}"
+    echo
+    echo " Version : ${CYWVIM_VERSION}"
+    echo " Autor   : ${CYWVIM_AUTHOR}"
+    echo " Licencia: ${CYWVIM_LICENSE}"
+    echo
+
     cyw_separator
+}
+
+# ==================================================
+# Sistema
+# ==================================================
+
+cyw_detect_system() {
+
+    cyw_info "Sistema detectado:"
+
+    if [[ -f /etc/os-release ]]; then
+
+        . /etc/os-release
+
+        echo "$PRETTY_NAME"
+
+    else
+
+        cyw_warning "No se pudo detectar la distribución."
+
+    fi
+
+    echo
+
 }
 
 # ==================================================
@@ -91,51 +135,119 @@ cyw_banner() {
 # (Se implementará más adelante)
 
 # ==================================================
-# Sistema
-# ==================================================
-
-detect_system()
-{
-    cyw_info "Sistema detectado:"
-
-    if [[ -f /etc/os-release ]]; then
-        source /etc/os-release
-        echo "$PRETTY_NAME"
-    else
-        cyw_warning "No se pudo detectar distribución."
-    fi
-
-    echo
-}
-
-#cyw_detect_os()
-#cyw_detect_arch()
-#cyw_detect_user()
-
-# ==================================================
 # Archivos
 # ==================================================
 
-#cyw_file_exists()
+cyw_file_exists() {
 
-#cyw_dir_exists()
+    [[ -f "$1" ]]
 
-#cyw_create_dir()
+}
 
-#cyw_copy()
+cyw_dir_exists() {
 
-#cyw_backup()
+    [[ -d "$1" ]]
+
+}
+
+cyw_create_dir() {
+
+    mkdir -p "$1"
+
+}
+
+cyw_create_dirs() {
+
+    mkdir -p "$@"
+
+}
+
+cyw_copy_file() {
+
+    cp "$1" "$2"
+
+}
+
+cyw_copy_dir() {
+
+    cp -R "$1" "$2"
+
+}
+
+cyw_remove() {
+
+    rm -rf "$1"
+
+}
 
 # ==================================================
 # Dependencias
 # ==================================================
 
-#cyw_command_exists()
-
-#cyw_require_command()
+# cyw_command_exists()
+# cyw_require_command()
 
 # ==================================================
 # Utilidades
 # ==================================================
 
 # (Se implementará más adelante)
+
+# ==================================================
+# Recursos
+# ==================================================
+
+load_defaults() {
+
+    local defaults="$RESOURCES_DIR/defaults.conf"
+
+    if [[ -f "$defaults" ]]; then
+        source "$defaults"
+    fi
+
+}
+
+
+read_list_file() {
+
+    local file="$1"
+
+    if [[ ! -f "$file" ]]; then
+        cyw_error "No existe archivo de recursos: $file"
+        return 1
+    fi
+
+
+    grep -Ev '^\s*$|^\s*#' "$file"
+
+}
+
+# ==================================================
+# Comandos
+# ==================================================
+
+cyw_run() {
+
+    "$@"
+
+}
+
+cyw_run_sudo() {
+
+    sudo "$@"
+
+}
+
+cyw_command_exists() {
+
+    command -v "$1" >/dev/null 2>&1
+
+}
+
+cyw_require_command() {
+
+    if ! cyw_command_exists "$1"; then
+        cyw_fatal "No se encontró el comando: $1"
+    fi
+
+}

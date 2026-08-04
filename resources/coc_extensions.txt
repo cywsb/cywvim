@@ -1,0 +1,11 @@
+cat > resources/coc_extensions.txt <<'EOF'
+# Extensiones COC.nvim
+
+coc-json
+coc-snippets
+coc-html
+coc-css
+coc-tsserver
+coc-pyright
+coc-sh
+EOF

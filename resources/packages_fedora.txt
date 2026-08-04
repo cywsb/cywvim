@@ -1,0 +1,3 @@
+cat > resources/packages_fedora.txt <<'EOF'
+# Pendiente soporte Fedora
+EOF

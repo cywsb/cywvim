@@ -7,11 +7,9 @@
 
 set -euo pipefail
 
-
 install_dependencies() {
 
     cyw_info "Instalando dependencias..."
-
 
     local packages=(
         vim
@@ -25,24 +23,13 @@ install_dependencies() {
         build-essential
     )
 
-
-    if ! command -v apt >/dev/null 2>&1; then
-
-        cyw_fatal "Gestor de paquetes no soportado."
-
-    fi
-
-
     cyw_info "Actualizando repositorios..."
 
-    sudo apt update
-
+    cyw_run_sudo apt update
 
     cyw_info "Instalando paquetes..."
 
-
-    sudo apt install -y "${packages[@]}"
-
+    cyw_run_sudo apt install -y "${packages[@]}"
 
     cyw_success "Dependencias instaladas."
 
