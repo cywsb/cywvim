@@ -108,20 +108,24 @@ cyw_banner() {
 # Sistema
 # ==================================================
 
+cyw_load_os_release() {
+
+    if [[ -f /etc/os-release ]]; then
+        source /etc/os-release
+    fi
+
+}
+
 cyw_detect_system() {
 
     cyw_info "Sistema detectado:"
 
-    if [[ -f /etc/os-release ]]; then
+    cyw_load_os_release
 
-        . /etc/os-release
-
+    if [[ -n "${PRETTY_NAME:-}" ]]; then
         echo "$PRETTY_NAME"
-
     else
-
         cyw_warning "No se pudo detectar la distribución."
-
     fi
 
     echo
@@ -132,7 +136,15 @@ cyw_detect_system() {
 # Confirmaciones
 # ==================================================
 
-# (Se implementará más adelante)
+cyw_confirm() {
+
+    local question="$1"
+
+    read -rp "$question [y/N]: " answer
+
+    [[ "$answer" =~ ^[Yy]$ ]]
+
+}
 
 # ==================================================
 # Archivos
@@ -170,13 +182,19 @@ cyw_copy_file() {
 
 cyw_copy_dir() {
 
-    cp -R "$1" "$2"
+    cp -a "$1" "$2"
 
 }
 
 cyw_remove() {
 
-    rm -rf "$1"
+    [[ -e "$1" ]] && rm -rf "$1"
+
+}
+
+cyw_symlink() {
+
+    ln -sfn "$1" "$2"
 
 }
 
@@ -222,6 +240,34 @@ read_list_file() {
 
 }
 
+read_key_value_file() {
+
+    local file="$1"
+
+    if [[ ! -f "$file" ]]; then
+        cyw_error "No existe archivo: $file"
+        return 1
+    fi
+
+    grep -Ev '^\s*$|^\s*#' "$file"
+
+}
+
+cyw_download() {
+
+    local url="$1"
+    local output="$2"
+
+    curl -fsSL "$url" -o "$output"
+
+}
+
+cyw_read_version() {
+
+    cat "$PROJECT_ROOT/VERSION"
+
+}
+
 # ==================================================
 # Comandos
 # ==================================================
@@ -251,3 +297,38 @@ cyw_require_command() {
     fi
 
 }
+
+# ==================================================
+# Vim
+# ==================================================
+
+cyw_run_vim() {
+
+     cyw_run vim "$@"
+
+}
+
+# ==================================================
+# Plugins
+# ==================================================
+
+cyw_list_plugins() {
+
+     grep -E "^[[:space:]]*Plug '" "$PLUGINS_DIR/plugins.vim" |
+        sed -E "s/^[[:space:]]*Plug '([^']+)'.*/\1/"
+
+}
+
+cyw_plugin_name() {
+
+    local repo="$1"
+
+    basename "$repo"
+
+}
+
+# ==================================================
+# Inicialización
+# ==================================================
+
+load_defaults

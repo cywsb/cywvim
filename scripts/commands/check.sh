@@ -1,80 +1,40 @@
 #!/usr/bin/env bash
 
+# ==================================================
+# CywVim
+# Health Check
+# ==================================================
+
 set -euo pipefail
 
-echo "================================="
-echo " CywVim v1.0 - Diagnóstico"
-echo "================================="
-echo
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
+source "$SCRIPT_DIR/scripts/common.sh"
 
-echo "[Vim]"
-vim --version | head -1
+source "$SCRIPT_DIR/scripts/check/commands.sh"
+source "$SCRIPT_DIR/scripts/check/dependencies.sh"
+source "$SCRIPT_DIR/scripts/check/vim.sh"
+source "$SCRIPT_DIR/scripts/check/plugins.sh"
+source "$SCRIPT_DIR/scripts/check/coc.sh"
 
+main() {
 
-echo
-echo "[vim-plug]"
+    cyw_banner
 
-if [[ -f "$HOME/.vim/autoload/plug.vim" ]]; then
-    echo "OK"
-else
-    echo "ERROR"
-fi
+    cyw_detect_system
 
+    check_commands
 
-check_files() {
+    check_dependencies
 
-    local title="$1"
-    local directory="$2"
+    check_vim
 
-    shift 2
+    check_plugins
 
-    echo
-    echo "[$title]"
+    check_coc
 
-    for file in "$@"
-    do
-        if [[ -f "$directory/$file" ]]; then
-            echo "$file OK"
-        else
-            echo "$file ERROR"
-        fi
-    done
+    cyw_success "Health Check finalizado."
+
 }
 
-
-check_files \
-"Configuración" \
-"$HOME/.vim/config" \
-general.vim \
-appearance.vim \
-editing.vim \
-search.vim \
-filetypes.vim
-
-
-
-check_files \
-"Plugins configuración" \
-"$HOME/.vim/plugins" \
-plugins.vim \
-colors.vim \
-nerdtree.vim \
-airline.vim \
-git.vim \
-autopairs.vim \
-coc.vim \
-mappings.vim
-
-
-
-echo
-echo "[Plugins instalados]"
-
-vim +PlugStatus +qall
-
-
-echo
-echo "================================="
-echo " Diagnóstico terminado"
-echo "================================="
+main "$@"
