@@ -16,9 +16,9 @@ check_coc() {
     # ------------------------------------------
 
     if cyw_command_exists node; then
-        cyw_success "Node.js"
+        cyw_ok "Node.js"
     else
-        cyw_warning "Node.js"
+        cyw_warn "Node.js"
     fi
 
     # ------------------------------------------
@@ -26,9 +26,9 @@ check_coc() {
     # ------------------------------------------
 
     if cyw_command_exists npm; then
-        cyw_success "npm"
+        cyw_ok "npm"
     else
-        cyw_warning "npm"
+        cyw_warn "npm"
     fi
 
     # ------------------------------------------
@@ -52,11 +52,11 @@ check_coc() {
 
         if [[ -d "$HOME/.config/coc/extensions/node_modules/$extension" ]]; then
 
-            cyw_success "$extension"
+            cyw_ok "$extension"
 
         else
 
-            cyw_warning "$extension"
+            cyw_warn "$extension"
 
         fi
 

@@ -2,14 +2,14 @@
 
 # ==================================================
 # CywVim
-# Instalación de plugins
+# Actualización de plugins
 # ==================================================
 
 set -euo pipefail
 
-install_plugins() {
+update_plugins() {
 
-    cyw_info "Instalando plugins Vim..."
+    cyw_info "Actualizando plugins Vim..."
 
     cyw_require_command vim
 
@@ -17,8 +17,8 @@ install_plugins() {
         cyw_fatal "vim-plug no está instalado."
     fi
 
-    cyw_vim_plug PlugInstall
+    cyw_vim_plug PlugUpdate
 
-    cyw_success "Plugins instalados."
+    cyw_success "Plugins actualizados."
 
 }

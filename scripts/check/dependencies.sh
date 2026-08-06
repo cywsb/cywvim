@@ -27,11 +27,11 @@ check_dependencies() {
 
         if cyw_command_exists "$command"; then
 
-            cyw_success "$package"
+            cyw_ok "$package"
 
         else
 
-            cyw_warning "$package"
+            cyw_warn "$package"
 
         fi
 

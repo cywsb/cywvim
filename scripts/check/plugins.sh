@@ -26,11 +26,11 @@ check_plugins() {
 
         if cyw_dir_exists "$INSTALL_DIR/plugged/$plugin"; then
 
-            cyw_success "$plugin"
+            cyw_ok "$plugin"
 
         else
 
-            cyw_warning "$plugin"
+            cyw_warn "$plugin"
 
         fi
 

@@ -18,6 +18,10 @@ install_coc_extensions() {
     cyw_require_command vim
     cyw_require_command node
 
+    # --------------------------------------------------
+    # Leer recursos
+    # --------------------------------------------------
+
     local extensions_file="$RESOURCES_DIR/coc_extensions.txt"
 
     if ! cyw_file_exists "$extensions_file"; then
@@ -34,26 +38,19 @@ install_coc_extensions() {
     fi
 
     # --------------------------------------------------
-    # Construir comando para Vim
+    # Extensiones encontradas
     # --------------------------------------------------
 
-    local cmd=""
-
     for extension in "${extensions[@]}"; do
-
         cyw_info "  • $extension"
-
-        cmd+="CocInstall -sync ${extension}|"
-
     done
-
-    cmd+="qa"
 
     # --------------------------------------------------
     # Instalar extensiones
     # --------------------------------------------------
 
-    cyw_run_vim "$cmd"
+    cyw_vim_coc_install "${extensions[@]}"
+
     cyw_success "Extensiones COC instaladas."
 
 }

@@ -1,64 +1,48 @@
 #!/usr/bin/env bash
 
+# ==================================================
+# CywVim
+# Actualizador principal
+# ==================================================
+
 set -euo pipefail
 
-# ==========================================
-# CywVim v1.0
-# Actualizador
-# ==========================================
+# ==================================================
+# Directorio del proyecto
+# ==================================================
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
+# ==================================================
+# Biblioteca común
+# ==================================================
 
+source "$SCRIPT_DIR/scripts/common.sh"
 
-info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+# ==================================================
+# Módulos
+# ==================================================
+
+source "$SCRIPT_DIR/scripts/update/plugins.sh"
+
+source "$SCRIPT_DIR/scripts/update/coc.sh"
+
+# ==================================================
+# Actualización
+# ==================================================
+
+main() {
+
+    cyw_banner
+
+    cyw_detect_system
+
+    update_plugins
+
+    update_coc_extensions
+
+    cyw_success "CywVim actualizado correctamente."
+
 }
 
-
-success() {
-    echo -e "${GREEN}[OK]${NC} $1"
-}
-
-
-error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-
-echo
-echo "==============================="
-echo " CywVim Update"
-echo "==============================="
-echo
-
-
-if [ ! -d "$HOME/.vim/plugged" ]; then
-    error "CywVim no parece estar instalado."
-    exit 1
-fi
-
-
-info "Actualizando plugins..."
-
-
-vim +PlugUpdate +qall
-
-
-success "Plugins actualizados."
-
-
-info "Actualizando extensiones COC..."
-
-
-vim -c "CocUpdate" -c q
-
-
-success "COC actualizado."
-
-
-echo
-success "CywVim actualizado correctamente."
+main "$@"

@@ -240,6 +240,16 @@ read_list_file() {
 
 }
 
+cyw_read_list() {
+
+    local file="$1"
+
+    mapfile -t CYW_LIST < <(
+        read_list_file "$file"
+    )
+
+}
+
 read_key_value_file() {
 
     local file="$1"
@@ -265,6 +275,41 @@ cyw_download() {
 cyw_read_version() {
 
     cat "$PROJECT_ROOT/VERSION"
+
+}
+
+# ==================================================
+# Vim
+# ==================================================
+
+cyw_run_vim() {
+
+    cyw_run vim "$@"
+
+}
+
+cyw_vim_plug() {
+
+    local command="$1"
+
+    cyw_run_vim \
+        +"${command} --sync" \
+        +qa
+
+}
+
+cyw_vim_coc_install() {
+
+    local extensions=("$@")
+    local cmd=""
+
+    for ext in "${extensions[@]}"; do
+        cmd+="CocInstall -sync ${ext}|"
+    done
+
+    cmd+="qa"
+
+    cyw_run_vim -c "$cmd"
 
 }
 
@@ -299,16 +344,6 @@ cyw_require_command() {
 }
 
 # ==================================================
-# Vim
-# ==================================================
-
-cyw_run_vim() {
-
-     cyw_run vim "$@"
-
-}
-
-# ==================================================
 # Plugins
 # ==================================================
 
@@ -324,6 +359,50 @@ cyw_plugin_name() {
     local repo="$1"
 
     basename "$repo"
+
+}
+
+# ==================================================
+# Estadísticas
+# ==================================================
+
+declare -i CYW_OK=0
+declare -i CYW_WARN=0
+declare -i CYW_ERROR=0
+
+cyw_ok() {
+
+    ((CYW_OK++))
+    cyw_success "$@"
+
+}
+
+cyw_warn() {
+
+    ((CYW_WARN++))
+    cyw_warning "$@"
+
+}
+
+cyw_fail() {
+
+    ((CYW_ERROR++))
+    cyw_error "$@"
+
+}
+
+cyw_print_stats() {
+
+    echo
+
+    cyw_separator
+
+    echo "Comprobaciones : $((CYW_OK + CYW_WARN + CYW_ERROR))"
+    echo "Correctas      : $CYW_OK"
+    echo "Advertencias   : $CYW_WARN"
+    echo "Errores        : $CYW_ERROR"
+
+    cyw_separator
 
 }
 

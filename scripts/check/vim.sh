@@ -16,9 +16,9 @@ check_vim() {
     # ------------------------------------------
 
     if cyw_dir_exists "$INSTALL_DIR"; then
-        cyw_success "~/.vim"
+        cyw_ok "~/.vim"
     else
-        cyw_warning "~/.vim no existe"
+        cyw_warn "~/.vim no existe"
     fi
 
 
@@ -27,31 +27,34 @@ check_vim() {
     # ------------------------------------------
 
     if cyw_file_exists "$VIMRC_FILE"; then
-        cyw_success "~/.vimrc"
+        cyw_ok "~/.vimrc"
     else
-        cyw_warning "~/.vimrc no existe"
+        cyw_warn "~/.vimrc no existe"
     fi
 
 
-    # ------------------------------------------
-    # Loader
-    # ------------------------------------------
+# ------------------------------------------
+# Loader
+# ------------------------------------------
 
-    if grep -q "source ~/.vim/vimrc" "$VIMRC_FILE" 2>/dev/null; then
-        cyw_success "Loader .vimrc"
+if cyw_file_exists "$VIMRC_FILE"; then
+
+    if grep -q "source ~/.vim/vimrc" "$VIMRC_FILE"; then
+        cyw_ok "Loader .vimrc"
     else
-        cyw_warning "Loader incorrecto"
+        cyw_warn "Loader incorrecto"
     fi
 
+fi
 
     # ------------------------------------------
     # vim-plug
     # ------------------------------------------
 
     if cyw_file_exists "$INSTALL_DIR/autoload/plug.vim"; then
-        cyw_success "vim-plug"
+        cyw_ok "vim-plug"
     else
-        cyw_warning "vim-plug no instalado"
+        cyw_warn "vim-plug no instalado"
     fi
 
 
@@ -60,9 +63,9 @@ check_vim() {
     # ------------------------------------------
 
     if cyw_file_exists "$INSTALL_DIR/vimrc"; then
-        cyw_success "vim/vimrc"
+        cyw_ok "vim/vimrc"
     else
-        cyw_warning "No existe ~/.vim/vimrc"
+        cyw_warn "No existe ~/.vim/vimrc"
     fi
 
 
@@ -74,9 +77,9 @@ check_vim() {
     do
 
         if cyw_dir_exists "$INSTALL_DIR/$dir"; then
-            cyw_success "$dir"
+            cyw_ok "~/.vim/$dir"
         else
-            cyw_warning "$dir"
+            cyw_warn "~/.vim/$dir"
         fi
 
     done
