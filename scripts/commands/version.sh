@@ -1,16 +1,36 @@
 #!/usr/bin/env bash
 
+# ==================================================
+# CywVim
+# Información de versión
+# ==================================================
+
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ==================================================
+# Directorio del proyecto
+# ==================================================
 
-source "$SCRIPT_DIR/../common.sh"
+readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-cyw_banner
+# ==================================================
+# Biblioteca común
+# ==================================================
 
-echo
-echo "Versión : $CYWVIM_VERSION"
-echo "Autor   : $CYWVIM_AUTHOR"
-echo "Licencia: $CYWVIM_LICENSE"
-echo "GitHub  : $CYWVIM_GITHUB"
-echo
+source "$PROJECT_ROOT/scripts/common.sh"
+
+# ==================================================
+# Información
+# ==================================================
+
+main() {
+
+    cyw_banner
+
+    echo
+    echo "GitHub : $CYWVIM_GITHUB"
+    echo
+
+}
+
+main "$@"

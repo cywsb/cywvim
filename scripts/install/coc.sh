@@ -33,13 +33,15 @@ install_coc_extensions() {
     )
 
     if [[ ${#extensions[@]} -eq 0 ]]; then
-        cyw_warning "No hay extensiones definidas."
+        cyw_warn "No hay extensiones definidas."
         return
     fi
 
     # --------------------------------------------------
     # Extensiones encontradas
     # --------------------------------------------------
+    cyw_info "Extensiones encontradas: ${#extensions[@]}"
+    echo
 
     for extension in "${extensions[@]}"; do
         cyw_info "  • $extension"
@@ -48,7 +50,10 @@ install_coc_extensions() {
     # --------------------------------------------------
     # Instalar extensiones
     # --------------------------------------------------
+    echo
 
+    cyw_info "Instalando extensiones..."
+    
     cyw_vim_coc_install "${extensions[@]}"
 
     cyw_success "Extensiones COC instaladas."

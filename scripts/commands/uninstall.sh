@@ -1,70 +1,81 @@
 #!/usr/bin/env bash
 
+# ==================================================
+# CywVim
+# Desinstalador principal
+# ==================================================
+
 set -euo pipefail
 
+# ==================================================
+# Directorio del proyecto
+# ==================================================
 
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m'
+readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
+# ==================================================
+# Biblioteca común
+# ==================================================
 
-echo
-echo "==============================="
-echo " CywVim Uninstall"
-echo "==============================="
-echo
+source "$PROJECT_ROOT/scripts/common.sh"
 
+# ==================================================
+# Módulos
+# ==================================================
 
-BACKUP=$(ls -td "$HOME"/.cywvim_backup_* 2>/dev/null | head -1 || true)
+source "$PROJECT_ROOT/scripts/uninstall/plugins.sh"
+source "$PROJECT_ROOT/scripts/uninstall/configuration.sh"
+source "$PROJECT_ROOT/scripts/uninstall/vim_plug.sh"
+source "$PROJECT_ROOT/scripts/uninstall/backup.sh"
 
+# ==================================================
+# Desinstalación
+# ==================================================
 
-if [ -z "$BACKUP" ]; then
+main() {
 
-    echo -e "${RED}No se encontró backup.${NC}"
+    # ----------------------------------------
+    # Información
+    # ----------------------------------------
 
-    exit 1
+    cyw_banner
 
-fi
+    cyw_detect_system
 
+    # ----------------------------------------
+    # Confirmación
+    # ----------------------------------------
 
-echo "Último backup encontrado:"
-echo "$BACKUP"
+    if ! cyw_confirm "¿Desea desinstalar CywVim?"; then
 
-echo
+        cyw_info "Operación cancelada."
 
-read -p "¿Restaurar este backup? (s/n): " RESP
+        exit 0
 
+    fi
 
-if [[ "$RESP" != "s" ]]; then
+    # ----------------------------------------
+    # Desinstalación
+    # ----------------------------------------
 
-    echo "Cancelado."
+    remove_plugins
+    remove_vim_plug
+    remove_configuration
 
-    exit 0
+    # ----------------------------------------
+    # Restauración
+    # ----------------------------------------
 
-fi
+    restore_backup
 
+    # ----------------------------------------
+    # Finalización
+    # ----------------------------------------
 
+    echo
 
-echo "Restaurando..."
+    cyw_success "CywVim desinstalado correctamente."
 
+}
 
-
-if [ -f "$BACKUP/.vimrc" ]; then
-
-    cp "$BACKUP/.vimrc" "$HOME/.vimrc"
-
-fi
-
-
-
-if [ -d "$BACKUP/.vim" ]; then
-
-    rm -rf "$HOME/.vim"
-
-    cp -r "$BACKUP/.vim" "$HOME/"
-
-fi
-
-
-
-echo -e "${GREEN}Restauración completada.${NC}"
+main "$@"

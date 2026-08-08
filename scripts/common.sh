@@ -138,11 +138,14 @@ cyw_detect_system() {
 
 cyw_confirm() {
 
-    local question="$1"
+    local message="$1"
+    local answer
 
-    read -rp "$question [y/N]: " answer
+    # Respuesta por defecto: No
 
-    [[ "$answer" =~ ^[Yy]$ ]]
+    read -rp "$message [s/N]: " answer
+
+    [[ "$answer" =~ ^[SsYy]$ ]]
 
 }
 
@@ -182,7 +185,12 @@ cyw_copy_file() {
 
 cyw_copy_dir() {
 
-    cp -a "$1" "$2"
+    local source="$1"
+    local destination="$2"
+
+    cyw_remove "$destination/$(basename "$source")"
+
+    cp -R "$source" "$destination"
 
 }
 
@@ -282,15 +290,31 @@ cyw_read_version() {
 # Vim
 # ==================================================
 
+# ==================================================
+# Vim
+# ==================================================
+
 cyw_run_vim() {
 
     cyw_run vim "$@"
 
 }
 
+cyw_install_loader() {
+
+    cyw_copy_file \
+        "$RESOURCES_DIR/vimrc_loader" \
+        "$VIMRC_FILE"
+
+}
+
 cyw_vim_plug() {
 
-    local command="$1"
+    local command="${1:-}"
+
+    if [[ -z "$command" ]]; then
+        cyw_fatal "No se especificó un comando vim-plug."
+    fi
 
     cyw_run_vim \
         +"${command} --sync" \
@@ -301,6 +325,11 @@ cyw_vim_plug() {
 cyw_vim_coc_install() {
 
     local extensions=("$@")
+
+    if [[ ${#extensions[@]} -eq 0 ]]; then
+        cyw_fatal "No se especificaron extensiones COC."
+    fi
+
     local cmd=""
 
     for ext in "${extensions[@]}"; do
@@ -310,6 +339,14 @@ cyw_vim_coc_install() {
     cmd+="qa"
 
     cyw_run_vim -c "$cmd"
+
+}
+
+cyw_vim_coc_update() {
+
+    cyw_run_vim \
+        -c "CocUpdate" \
+        -c "qa"
 
 }
 

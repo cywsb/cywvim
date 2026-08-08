@@ -2,26 +2,46 @@
 
 # ==================================================
 # CywVim
-# Health Check
+# Check principal
 # ==================================================
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# ==================================================
+# Directorio del proyecto
+# ==================================================
 
-source "$SCRIPT_DIR/scripts/common.sh"
+readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-source "$SCRIPT_DIR/scripts/check/commands.sh"
-source "$SCRIPT_DIR/scripts/check/dependencies.sh"
-source "$SCRIPT_DIR/scripts/check/vim.sh"
-source "$SCRIPT_DIR/scripts/check/plugins.sh"
-source "$SCRIPT_DIR/scripts/check/coc.sh"
+# ==================================================
+# Biblioteca común
+# ==================================================
+
+source "$PROJECT_ROOT/scripts/common.sh"
+
+# ==================================================
+# Módulos
+# ==================================================
+
+source "$PROJECT_ROOT/scripts/check/commands.sh"
+source "$PROJECT_ROOT/scripts/check/dependencies.sh"
+source "$PROJECT_ROOT/scripts/check/vim.sh"
+source "$PROJECT_ROOT/scripts/check/plugins.sh"
+source "$PROJECT_ROOT/scripts/check/coc.sh"
 
 main() {
+
+    # ----------------------------------------
+    # Información
+    # ----------------------------------------
 
     cyw_banner
 
     cyw_detect_system
+
+    # ----------------------------------------
+    # Comprobaciones
+    # ----------------------------------------
 
     check_commands
 
@@ -33,8 +53,19 @@ main() {
 
     check_coc
 
-    cyw_success "Health Check finalizado."
+    # ----------------------------------------
+    # Estadísticas
+    # ----------------------------------------
 
+    cyw_print_stats
+
+    # ----------------------------------------
+    # Finalización
+    # ----------------------------------------
+
+    echo
+
+    cyw_success "Verificación completada."
 }
 
 main "$@"

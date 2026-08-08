@@ -7,14 +7,15 @@
 
 set -euo pipefail
 
-
 install_dependencies() {
 
     cyw_info "Instalando dependencias..."
 
+    # --------------------------------------------------
+    # Seleccionar archivo de paquetes
+    # --------------------------------------------------
 
     local packages_file=""
-
 
     case "${ID:-}" in
 
@@ -23,18 +24,15 @@ install_dependencies() {
             packages_file="$RESOURCES_DIR/packages_debian.txt"
             ;;
 
-
         arch|manjaro)
 
             packages_file="$RESOURCES_DIR/packages_arch.txt"
             ;;
 
-
         fedora|rhel)
 
             packages_file="$RESOURCES_DIR/packages_fedora.txt"
             ;;
-
 
         *)
 
@@ -43,21 +41,23 @@ install_dependencies() {
 
     esac
 
+    # --------------------------------------------------
+    # Verificar archivo de paquetes
+    # --------------------------------------------------
 
-
-    if [[ ! -f "$packages_file" ]]; then
+    if ! cyw_file_exists "$packages_file"; then
 
         cyw_fatal "No existe archivo de paquetes: $packages_file"
 
     fi
 
-
+    # --------------------------------------------------
+    # Leer paquetes
+    # --------------------------------------------------
 
     mapfile -t packages < <(
         read_list_file "$packages_file"
     )
-
-
 
     if [[ ${#packages[@]} -eq 0 ]]; then
 
@@ -65,13 +65,17 @@ install_dependencies() {
 
     fi
 
-
-
-    cyw_info "Actualizando repositorios..."
+    # --------------------------------------------------
+    # Instalar paquetes
+    # --------------------------------------------------
 
     case "${ID:-}" in
 
         debian|ubuntu|linuxmint)
+
+            cyw_require_command apt
+
+            cyw_info "Actualizando repositorios..."
 
             cyw_run_sudo apt update
 
@@ -81,8 +85,9 @@ install_dependencies() {
 
             ;;
 
-
         arch|manjaro)
+
+            cyw_require_command pacman
 
             cyw_info "Instalando paquetes..."
 
@@ -90,8 +95,9 @@ install_dependencies() {
 
             ;;
 
-
         fedora|rhel)
+
+            cyw_require_command dnf
 
             cyw_info "Instalando paquetes..."
 
@@ -101,8 +107,13 @@ install_dependencies() {
 
     esac
 
+    # --------------------------------------------------
+    # Finalización
+    # --------------------------------------------------
 
+    echo
 
     cyw_success "Dependencias instaladas."
 
 }
+

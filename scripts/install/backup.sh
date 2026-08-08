@@ -7,39 +7,38 @@
 
 set -euo pipefail
 
-
 create_backup() {
 
     cyw_info "Creando backup..."
 
-
     local backup_dir="$HOME/.cywvim_backup_$(date +%Y%m%d_%H%M%S)"
 
+    cyw_create_dir "$backup_dir"
 
-    mkdir -p "$backup_dir"
-
-
-    if [[ -d "$HOME/.vim" ]]; then
+    if cyw_dir_exists "$HOME/.vim"; then
 
         cyw_info "Respaldando ~/.vim"
 
-        cp -a "$HOME/.vim" \
-            "$backup_dir/"
+        cyw_copy_dir \
+            "$HOME/.vim" \
+            "$backup_dir"
 
     fi
 
-
-    if [[ -f "$HOME/.vimrc" ]]; then
+    if cyw_file_exists "$HOME/.vimrc"; then
 
         cyw_info "Respaldando ~/.vimrc"
 
-        cp "$HOME/.vimrc" \
-            "$backup_dir/"
+        cyw_copy_file \
+            "$HOME/.vimrc" \
+            "$backup_dir/.vimrc"
 
     fi
 
+    echo
 
-    cyw_success "Backup creado:"
-    echo "$backup_dir"
+    cyw_success "Backup creado."
+
+    echo "  $backup_dir"
 
 }

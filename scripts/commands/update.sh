@@ -11,21 +11,20 @@ set -euo pipefail
 # Directorio del proyecto
 # ==================================================
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # ==================================================
 # Biblioteca común
 # ==================================================
 
-source "$SCRIPT_DIR/scripts/common.sh"
+source "$PROJECT_ROOT/scripts/common.sh"
 
 # ==================================================
 # Módulos
 # ==================================================
 
-source "$SCRIPT_DIR/scripts/update/plugins.sh"
-
-source "$SCRIPT_DIR/scripts/update/coc.sh"
+source "$PROJECT_ROOT/scripts/update/plugins.sh"
+source "$PROJECT_ROOT/scripts/update/coc.sh"
 
 # ==================================================
 # Actualización
@@ -33,13 +32,27 @@ source "$SCRIPT_DIR/scripts/update/coc.sh"
 
 main() {
 
+    # ----------------------------------------
+    # Información
+    # ----------------------------------------
+
     cyw_banner
 
     cyw_detect_system
 
+    # ----------------------------------------
+    # Actualización
+    # ----------------------------------------
+
     update_plugins
 
     update_coc_extensions
+
+    # ----------------------------------------
+    # Finalización
+    # ----------------------------------------
+
+    echo
 
     cyw_success "CywVim actualizado correctamente."
 

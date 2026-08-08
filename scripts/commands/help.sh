@@ -1,14 +1,33 @@
 #!/usr/bin/env bash
 
+# ==================================================
+# CywVim
+# Ayuda
+# ==================================================
+
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ==================================================
+# Directorio del proyecto
+# ==================================================
 
-source "$SCRIPT_DIR/../common.sh"
+readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-cyw_banner
+# ==================================================
+# Biblioteca común
+# ==================================================
 
-cat <<EOF
+source "$PROJECT_ROOT/scripts/common.sh"
+
+# ==================================================
+# Ayuda
+# ==================================================
+
+main() {
+
+    cyw_banner
+
+    cat <<EOF
 
 Uso:
 
@@ -17,10 +36,21 @@ Uso:
 Comandos disponibles:
 
     install      Instalar CywVim
-    update       Actualizar CywVim
-    check        Verificar instalación
+    update       Actualizar plugins y extensiones
+    check        Verificar la instalación
     uninstall    Desinstalar CywVim
-    version      Mostrar versión
+    version      Mostrar información de la versión
     help         Mostrar esta ayuda
 
+Ejemplos:
+
+    cywvim install
+    cywvim check
+    cywvim update
+    cywvim uninstall
+
 EOF
+
+}
+
+main "$@"
