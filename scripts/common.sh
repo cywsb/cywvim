@@ -217,7 +217,9 @@ cyw_copy_dir() {
 
 cyw_remove() {
 
-    [[ -e "$1" ]] && rm -rf "$1"
+    if [[ -e "$1" ]]; then
+        rm -rf "$1"
+    fi
 
 }
 

@@ -11,13 +11,13 @@ set -euo pipefail
 # Directorio del proyecto
 # ==================================================
 
-readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # ==================================================
 # Cargar biblioteca común
 # ==================================================
 
-source "$PROJECT_ROOT/scripts/common.sh"
+source "$SCRIPT_DIR/scripts/common.sh"
 
 # ==================================================
 # Cargar módulos de instalación
