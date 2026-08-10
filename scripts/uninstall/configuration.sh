@@ -11,6 +11,10 @@ remove_configuration() {
 
     cyw_info "Eliminando configuración..."
 
+    # --------------------------------------------------
+    # ~/.vim
+    # --------------------------------------------------
+
     if cyw_dir_exists "$INSTALL_DIR"; then
 
         cyw_remove "$INSTALL_DIR"
@@ -19,9 +23,13 @@ remove_configuration() {
 
     else
 
-        cyw_warning "~/.vim no existe."
+        cyw_warn "~/.vim no existe."
 
     fi
+
+    # --------------------------------------------------
+    # ~/.vimrc
+    # --------------------------------------------------
 
     if cyw_file_exists "$VIMRC_FILE"; then
 
@@ -31,8 +39,9 @@ remove_configuration() {
 
     else
 
-        cyw_warning "~/.vimrc no existe."
+        cyw_warn "~/.vimrc no existe."
 
     fi
 
 }
+

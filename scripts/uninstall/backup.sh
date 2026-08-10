@@ -9,6 +9,10 @@ set -euo pipefail
 
 restore_backup() {
 
+    # --------------------------------------------------
+    # Buscar último backup
+    # --------------------------------------------------
+
     local backup
 
     backup=$(find "$HOME" \
@@ -20,11 +24,15 @@ restore_backup() {
 
     if [[ -z "$backup" ]]; then
 
-        cyw_warning "No se encontró ningún backup."
+        cyw_warn "No se encontró ningún backup."
 
         return
 
     fi
+
+    # --------------------------------------------------
+    # Mostrar backup encontrado
+    # --------------------------------------------------
 
     echo
 
@@ -33,13 +41,25 @@ restore_backup() {
 
     echo
 
+    # --------------------------------------------------
+    # Confirmar restauración
+    # --------------------------------------------------
+
     if ! cyw_confirm "¿Desea restaurar el último backup?"; then
+
+        cyw_info "Restauración cancelada."
 
         return
 
     fi
 
+    # --------------------------------------------------
+    # Restaurar configuración
+    # --------------------------------------------------
+
     cyw_info "Restaurando configuración..."
+
+    local restored=false
 
     if cyw_dir_exists "$backup/.vim"; then
 
@@ -47,16 +67,33 @@ restore_backup() {
             "$backup/.vim" \
             "$HOME"
 
+        restored=true
+
     fi
 
     if cyw_file_exists "$backup/.vimrc"; then
 
         cyw_copy_file \
             "$backup/.vimrc" \
-            "$HOME/.vimrc"
+            "$VIMRC_FILE"
+
+        restored=true
+
+    fi
+
+    # --------------------------------------------------
+    # Verificar resultado
+    # --------------------------------------------------
+
+    if [[ "$restored" != true ]]; then
+
+        cyw_warn "El backup no contiene archivos de configuración."
+
+        return
 
     fi
 
     cyw_success "Backup restaurado."
 
 }
+

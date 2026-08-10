@@ -20,9 +20,13 @@ check_commands() {
     for cmd in "${commands[@]}"; do
 
         if cyw_command_exists "$cmd"; then
-            cyw_success "$cmd"
+
+            cyw_ok "$cmd"
+
         else
-            cyw_warning "$cmd"
+
+            cyw_warn "$cmd"
+
         fi
 
     done
@@ -30,3 +34,4 @@ check_commands() {
     echo
 
 }
+

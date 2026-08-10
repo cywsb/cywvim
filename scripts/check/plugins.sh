@@ -11,11 +11,23 @@ check_plugins() {
 
     cyw_info "Verificando plugins..."
 
+    # --------------------------------------------------
+    # Verificar archivo de plugins
+    # --------------------------------------------------
+
     if ! cyw_file_exists "$PLUGINS_DIR/plugins.vim"; then
-        cyw_warning "No existe plugins.vim"
+
+        cyw_warn "No existe plugins.vim"
+
         echo
+
         return
+
     fi
+
+    # --------------------------------------------------
+    # Verificar plugins instalados
+    # --------------------------------------------------
 
     while read -r repo
     do
@@ -39,3 +51,4 @@ check_plugins() {
     echo
 
 }
+

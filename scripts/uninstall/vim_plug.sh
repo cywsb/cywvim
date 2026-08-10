@@ -9,9 +9,13 @@ set -euo pipefail
 
 remove_vim_plug() {
 
-    local plug="$INSTALL_DIR/autoload/plug.vim"
-
     cyw_info "Eliminando vim-plug..."
+
+    # --------------------------------------------------
+    # Verificar instalación
+    # --------------------------------------------------
+
+    local plug="$INSTALL_DIR/autoload/plug.vim"
 
     if cyw_file_exists "$plug"; then
 
@@ -26,3 +30,4 @@ remove_vim_plug() {
     fi
 
 }
+

@@ -30,6 +30,8 @@ readonly TESTS_DIR="$PROJECT_ROOT/tests"
 readonly INSTALL_DIR="$HOME/.vim"
 readonly VIMRC_FILE="$HOME/.vimrc"
 
+readonly CYW_COC_EXTENSIONS_DIR="$HOME/.config/coc/extensions/node_modules"
+
 # ==================================================
 # Información del proyecto
 # ==================================================
@@ -60,24 +62,35 @@ readonly NC="\033[0m"
 # ==================================================
 
 cyw_info() {
+
     echo -e "${BLUE}[INFO]${NC} $*"
+
 }
 
 cyw_success() {
+
     echo -e "${GREEN}[ OK ]${NC} $*"
+
 }
 
 cyw_warning() {
+
     echo -e "${YELLOW}[WARN]${NC} $*"
+
 }
 
 cyw_error() {
+
     echo -e "${RED}[ERROR]${NC} $*" >&2
+
 }
 
 cyw_fatal() {
+
     cyw_error "$*"
+
     exit 1
+
 }
 
 # ==================================================
@@ -85,8 +98,11 @@ cyw_fatal() {
 # ==================================================
 
 cyw_separator() {
+
     printf '=%.0s' {1..50}
+
     echo
+
 }
 
 cyw_banner() {
@@ -102,6 +118,7 @@ cyw_banner() {
     echo
 
     cyw_separator
+
 }
 
 # ==================================================
@@ -123,9 +140,13 @@ cyw_detect_system() {
     cyw_load_os_release
 
     if [[ -n "${PRETTY_NAME:-}" ]]; then
+
         echo "$PRETTY_NAME"
+
     else
+
         cyw_warning "No se pudo detectar la distribución."
+
     fi
 
     echo
@@ -207,19 +228,6 @@ cyw_symlink() {
 }
 
 # ==================================================
-# Dependencias
-# ==================================================
-
-# cyw_command_exists()
-# cyw_require_command()
-
-# ==================================================
-# Utilidades
-# ==================================================
-
-# (Se implementará más adelante)
-
-# ==================================================
 # Recursos
 # ==================================================
 
@@ -233,16 +241,17 @@ load_defaults() {
 
 }
 
-
 read_list_file() {
 
     local file="$1"
 
     if [[ ! -f "$file" ]]; then
-        cyw_error "No existe archivo de recursos: $file"
-        return 1
-    fi
 
+        cyw_error "No existe archivo de recursos: $file"
+
+        return 1
+
+    fi
 
     grep -Ev '^\s*$|^\s*#' "$file"
 
@@ -263,8 +272,11 @@ read_key_value_file() {
     local file="$1"
 
     if [[ ! -f "$file" ]]; then
+
         cyw_error "No existe archivo: $file"
+
         return 1
+
     fi
 
     grep -Ev '^\s*$|^\s*#' "$file"
@@ -290,10 +302,6 @@ cyw_read_version() {
 # Vim
 # ==================================================
 
-# ==================================================
-# Vim
-# ==================================================
-
 cyw_run_vim() {
 
     cyw_run vim "$@"
@@ -313,7 +321,9 @@ cyw_vim_plug() {
     local command="${1:-}"
 
     if [[ -z "$command" ]]; then
+
         cyw_fatal "No se especificó un comando vim-plug."
+
     fi
 
     cyw_run_vim \
@@ -327,13 +337,17 @@ cyw_vim_coc_install() {
     local extensions=("$@")
 
     if [[ ${#extensions[@]} -eq 0 ]]; then
+
         cyw_fatal "No se especificaron extensiones COC."
+
     fi
 
     local cmd=""
 
     for ext in "${extensions[@]}"; do
+
         cmd+="CocInstall -sync ${ext}|"
+
     done
 
     cmd+="qa"
@@ -375,7 +389,9 @@ cyw_command_exists() {
 cyw_require_command() {
 
     if ! cyw_command_exists "$1"; then
+
         cyw_fatal "No se encontró el comando: $1"
+
     fi
 
 }
@@ -386,7 +402,7 @@ cyw_require_command() {
 
 cyw_list_plugins() {
 
-     grep -E "^[[:space:]]*Plug '" "$PLUGINS_DIR/plugins.vim" |
+    grep -E "^[[:space:]]*Plug '" "$PLUGINS_DIR/plugins.vim" |
         sed -E "s/^[[:space:]]*Plug '([^']+)'.*/\1/"
 
 }
@@ -409,21 +425,24 @@ declare -i CYW_ERROR=0
 
 cyw_ok() {
 
-    ((CYW_OK++))
+    ((++CYW_OK))
+
     cyw_success "$@"
 
 }
 
 cyw_warn() {
 
-    ((CYW_WARN++))
+    ((++CYW_WARN))
+
     cyw_warning "$@"
 
 }
 
 cyw_fail() {
 
-    ((CYW_ERROR++))
+    ((++CYW_ERROR))
+
     cyw_error "$@"
 
 }
@@ -448,3 +467,4 @@ cyw_print_stats() {
 # ==================================================
 
 load_defaults
+
