@@ -17,11 +17,23 @@ check_coc() {
 
     if cyw_command_exists node; then
 
-        cyw_ok "Node.js"
+        local node_version
+        node_version="$(node --version | sed 's/^v//')"
+
+        if cyw_version_ge "$node_version" "$NODE_MIN_VERSION"; then
+
+            cyw_ok "Node.js v$node_version"
+
+        else
+
+            cyw_warn \
+                "Node.js v$node_version (mínimo requerido: $NODE_MIN_VERSION)"
+
+        fi
 
     else
 
-        cyw_warn "Node.js"
+        cyw_warn "Node.js no instalado"
 
     fi
 
@@ -31,11 +43,35 @@ check_coc() {
 
     if cyw_command_exists npm; then
 
-        cyw_ok "npm"
+        local npm_version
+        npm_version="$(npm --version)"
+
+        cyw_ok "npm v$npm_version"
 
     else
 
-        cyw_warn "npm"
+        cyw_warn "npm no instalado"
+
+    fi
+
+    # --------------------------------------------------
+    # Node.js crypto
+    # --------------------------------------------------
+
+    if cyw_command_exists node; then
+
+        if node -e \
+            'process.exit(typeof crypto?.randomUUID === "function" ? 0 : 1)' \
+            2>/dev/null
+        then
+
+            cyw_ok "Node.js crypto.randomUUID"
+
+        else
+
+            cyw_warn "Node.js crypto.randomUUID no disponible"
+
+        fi
 
     fi
 
@@ -91,6 +127,4 @@ check_coc() {
     done < <(read_list_file "$extensions_file")
 
     echo
-
 }
-

@@ -243,6 +243,17 @@ load_defaults() {
 
 }
 
+load_versions() {
+
+    local versions="$RESOURCES_DIR/versions.conf"
+
+    if [[ ! -f "$versions" ]]; then
+        cyw_fatal "No existe archivo de versiones: $versions"
+    fi
+
+    source "$versions"
+}
+
 read_list_file() {
 
     local file="$1"
@@ -398,6 +409,14 @@ cyw_require_command() {
 
 }
 
+cyw_version_ge() {
+
+    local current="$1"
+    local required="$2"
+
+    dpkg --compare-versions "$current" ge "$required"
+}
+
 # ==================================================
 # Plugins
 # ==================================================
@@ -469,4 +488,4 @@ cyw_print_stats() {
 # ==================================================
 
 load_defaults
-
+load_versions
