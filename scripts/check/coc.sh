@@ -79,13 +79,13 @@ check_coc() {
     # coc.nvim
     # --------------------------------------------------
 
-    if cyw_dir_exists "$INSTALL_DIR/plugged/coc.nvim"; then
+    if cyw_file_exists "$INSTALL_DIR/plugged/coc.nvim/build/index.js"; then
 
         cyw_ok "coc.nvim"
 
     else
 
-        cyw_warn "coc.nvim no instalado"
+        cyw_warn "coc.nvim incompleto o no instalado"
 
     fi
 

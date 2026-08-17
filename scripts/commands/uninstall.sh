@@ -23,9 +23,7 @@ source "$SCRIPT_DIR/scripts/common.sh"
 # Módulos
 # ==================================================
 
-source "$PROJECT_ROOT/scripts/uninstall/plugins.sh"
 source "$PROJECT_ROOT/scripts/uninstall/configuration.sh"
-source "$PROJECT_ROOT/scripts/uninstall/vim_plug.sh"
 source "$PROJECT_ROOT/scripts/uninstall/backup.sh"
 
 # ==================================================
@@ -58,8 +56,6 @@ main() {
     # Desinstalación
     # ----------------------------------------
 
-    remove_plugins
-    remove_vim_plug
     remove_configuration
 
     # ----------------------------------------

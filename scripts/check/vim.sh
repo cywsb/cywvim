@@ -12,6 +12,32 @@ check_vim() {
     cyw_info "Verificando instalación de Vim..."
 
     # --------------------------------------------------
+    # Versión de Vim
+    # --------------------------------------------------
+
+    if cyw_command_exists vim; then
+
+        local vim_version
+        vim_version="$(vim --version | head -n 1 | grep -oE '[0-9]+\.[0-9]+' | head -n 1)"
+
+        if cyw_version_ge "$vim_version" "$VIM_MIN_VERSION"; then
+
+            cyw_ok "Vim v$vim_version"
+
+        else
+
+            cyw_warn \
+                "Vim v$vim_version (mínimo requerido: $VIM_MIN_VERSION)"
+
+        fi
+
+    else
+
+        cyw_warn "Vim no instalado"
+
+    fi
+
+    # --------------------------------------------------
     # ~/.vim
     # --------------------------------------------------
 

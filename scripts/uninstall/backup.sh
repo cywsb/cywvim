@@ -13,14 +13,26 @@ restore_backup() {
     # Buscar último backup
     # --------------------------------------------------
 
-    local backup
+    local backup=""
 
-    backup=$(find "$HOME" \
-        -maxdepth 1 \
-        -type d \
-        -name ".cywvim_backup_*" \
-        | sort \
-        | tail -n1)
+    while IFS= read -r candidate
+    do
+
+        if cyw_dir_exists "$candidate/.vim" ||
+           cyw_file_exists "$candidate/.vimrc"; then
+
+            backup="$candidate"
+            break
+
+        fi
+
+    done < <(
+        find "$HOME" \
+            -maxdepth 1 \
+            -type d \
+            -name ".cywvim_backup_*" \
+            | sort -r
+    )
 
     if [[ -z "$backup" ]]; then
 

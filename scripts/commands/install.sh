@@ -25,15 +25,17 @@ source "$SCRIPT_DIR/scripts/common.sh"
 
 source "$PROJECT_ROOT/scripts/install/backup.sh"
 
-source "$PROJECT_ROOT/scripts/install/coc.sh"
+source "$PROJECT_ROOT/scripts/install/dependencies.sh"
+
+source "$PROJECT_ROOT/scripts/install/node.sh"
+
+source "$PROJECT_ROOT/scripts/install/vim_plug.sh"
 
 source "$PROJECT_ROOT/scripts/install/configuration.sh"
 
-source "$PROJECT_ROOT/scripts/install/dependencies.sh"
-
 source "$PROJECT_ROOT/scripts/install/plugins.sh"
 
-source "$PROJECT_ROOT/scripts/install/vim_plug.sh"
+source "$PROJECT_ROOT/scripts/install/coc.sh"
 
 # ==================================================
 # Instalación principal
@@ -56,6 +58,8 @@ main() {
     create_backup
 
     install_dependencies
+
+    install_node
 
     install_vim_plug
 
