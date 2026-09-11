@@ -1,11 +1,12 @@
 # Dependencias Debian
 
-vim
+vim-gtk3
 git
 curl
 ripgrep
 fzf
 xclip
+wl-clipboard
 universal-ctags
 fonts-powerline
 build-essential

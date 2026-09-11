@@ -38,6 +38,20 @@ check_vim() {
     fi
 
     # --------------------------------------------------
+    # Soporte de portapapeles
+    # --------------------------------------------------
+
+    if cyw_command_exists vim; then
+
+        if vim --version | grep -q '+clipboard'; then
+            cyw_ok "Vim con soporte de portapapeles"
+        else
+            cyw_warn "Vim sin soporte de portapapeles"
+        fi
+
+    fi
+
+    # --------------------------------------------------
     # ~/.vim
     # --------------------------------------------------
 

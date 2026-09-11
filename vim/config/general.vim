@@ -45,3 +45,9 @@ set directory=~/.vim/swap
 
 " Buffers
 set hidden
+
+" ------------------------------------------
+" Portapapeles
+" ------------------------------------------
+
+set clipboard=unnamedplus
