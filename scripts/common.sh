@@ -410,11 +410,15 @@ cyw_require_command() {
 }
 
 cyw_version_ge() {
-
     local current="$1"
     local required="$2"
 
-    dpkg --compare-versions "$current" ge "$required"
+    # Normalizar versiones equivalentes:
+    # 9 == 9.0 == 9.0.0
+    current="$(printf '%s' "$current" | sed -E 's/(\.0)+$//')"
+    required="$(printf '%s' "$required" | sed -E 's/(\.0)+$//')"
+
+    [[ "$(printf '%s\n%s\n' "$required" "$current" | sort -V | head -n1)" == "$required" ]]
 }
 
 # ==================================================

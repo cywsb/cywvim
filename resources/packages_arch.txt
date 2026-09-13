@@ -1,3 +1,11 @@
-cat > resources/packages_arch.txt <<'EOF'
-# Pendiente soporte Arch Linux
-EOF
+# Dependencias Arch Linux / CachyOS
+
+gvim
+git
+curl
+ripgrep
+fzf
+xclip
+wl-clipboard
+universal-ctags
+powerline-fonts

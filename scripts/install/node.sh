@@ -43,20 +43,34 @@ install_node() {
     # --------------------------------------------------
 
     case "${ID:-}" in
-
         debian|ubuntu|linuxmint)
             ;;
+        arch|cachyos|manjaro)
+            cyw_require_command pacman
 
-        arch|manjaro|fedora|rhel)
-            cyw_fatal \
-                "Instalación automática de Node.js no implementada para: ${ID:-desconocida}"
+            cyw_info "Instalando Node.js y npm..."
+            cyw_run_sudo pacman -Syu --needed --noconfirm nodejs npm
+
+            if ! cyw_command_exists node; then
+                cyw_fatal "Node.js no pudo ser instalado."
+            fi
+
+            node_version="$(node --version | sed 's/^v//')"
+
+            if ! cyw_version_ge "$node_version" "$NODE_MIN_VERSION"; then
+                cyw_fatal "La versión instalada de Node.js ($node_version) no cumple el mínimo requerido ($NODE_MIN_VERSION)."
+            fi
+
+            echo
+            cyw_success "Node.js v$node_version instalado correctamente."
+            return
             ;;
-
+        fedora|rhel)
+            cyw_fatal "Instalación automática de Node.js no implementada para: ${ID:-desconocida}"
+            ;;
         *)
-            cyw_fatal \
-                "Distribución no soportada: ${ID:-desconocida}"
+            cyw_fatal "Distribución no soportada: ${ID:-desconocida}"
             ;;
-
     esac
 
     # --------------------------------------------------

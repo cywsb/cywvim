@@ -24,8 +24,7 @@ install_dependencies() {
             packages_file="$RESOURCES_DIR/packages_debian.txt"
             ;;
 
-        arch|manjaro)
-
+        arch|cachyos|manjaro)
             packages_file="$RESOURCES_DIR/packages_arch.txt"
             ;;
 
@@ -85,14 +84,10 @@ install_dependencies() {
 
             ;;
 
-        arch|manjaro)
-
+        arch|cachyos|manjaro)
             cyw_require_command pacman
-
-            cyw_info "Instalando paquetes..."
-
-            cyw_run_sudo pacman -Sy --needed --noconfirm "${packages[@]}"
-
+            cyw_info "Actualizando sistema e instalando paquetes..."
+            cyw_run_sudo pacman -Syu --needed --noconfirm "${packages[@]}"
             ;;
 
         fedora|rhel)
