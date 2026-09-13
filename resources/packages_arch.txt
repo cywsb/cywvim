@@ -7,5 +7,5 @@ ripgrep
 fzf
 xclip
 wl-clipboard
-universal-ctags
+ctags
 powerline-fonts
