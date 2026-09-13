@@ -49,7 +49,7 @@ install_node() {
             cyw_require_command pacman
 
             cyw_info "Instalando Node.js y npm..."
-            cyw_run_sudo pacman -Syu --needed --noconfirm nodejs npm
+            cyw_run_sudo pacman -S --needed --noconfirm nodejs npm
 
             if ! cyw_command_exists node; then
                 cyw_fatal "Node.js no pudo ser instalado."
